@@ -1,0 +1,108 @@
+// Give each respective Input Pin a named variable
+
+const byte inPin0 = A0;
+const byte inPin1 = A1;
+const byte inPin2 = A2;
+const byte inPin3 = A3;
+const byte inPin4 = A4;
+const byte inPin5 = A5;
+const byte inPin6 = 5;
+const byte inPin7 = 6;
+const byte inPin8 = 7;
+const byte inPin9 = 8;
+const byte inPin10 = 9;
+const byte inPin11 = 10;
+const byte inPin12 = 11;
+const byte inPin13 = 12;
+const byte inPin14 = 13;
+
+// Give each respective Output Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the Shift Register
+
+const byte latchPin = 2;
+const byte clockPin = 3;
+const byte dataPin = 4;
+
+// Declaring two variables for storing the two bytes 
+// that is going to be sent to the Shift Registers
+
+byte shiftByte1;
+byte shiftByte2;
+
+void setup() {
+  
+  // Declare Input Pins to work in Input Mode
+  // reading values from the connected Push Buttons
+  
+  pinMode(inPin0, INPUT);
+  pinMode(inPin1, INPUT);
+  pinMode(inPin2, INPUT);
+  pinMode(inPin3, INPUT);
+  pinMode(inPin4, INPUT);
+  pinMode(inPin5, INPUT);
+  pinMode(inPin6, INPUT);
+  pinMode(inPin7, INPUT);
+  pinMode(inPin8, INPUT);
+  pinMode(inPin9, INPUT);
+  pinMode(inPin10, INPUT);
+  pinMode(inPin11, INPUT);
+  pinMode(inPin12, INPUT);
+  pinMode(inPin13, INPUT);
+  pinMode(inPin14, INPUT);
+
+  // Declare the Output Pins to work in Output
+  // Mode to the Shift Register input pins
+  
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+}
+
+void loop() {
+  
+  // Read the inputs and collects the values to be shifted out
+  // Correlates the input pins to the bits to be sent
+  // Since shiftOut is  written to output 1 byte (8 bits) it
+  // requires a two step operation to output values larger than 255
+
+  bitWrite(shiftByte1, 0, digitalRead(inPin0));
+  bitWrite(shiftByte1, 1, digitalRead(inPin1));
+  bitWrite(shiftByte1, 2, digitalRead(inPin2));
+  bitWrite(shiftByte1, 3, digitalRead(inPin3));
+  bitWrite(shiftByte1, 4, digitalRead(inPin4));
+  bitWrite(shiftByte1, 5, digitalRead(inPin5));
+  bitWrite(shiftByte1, 6, digitalRead(inPin6));
+  bitWrite(shiftByte1, 7, digitalRead(inPin7));
+  bitWrite(shiftByte2, 0, digitalRead(inPin8));
+  bitWrite(shiftByte2, 1, digitalRead(inPin9));
+  bitWrite(shiftByte2, 2, digitalRead(inPin10));
+  bitWrite(shiftByte2, 3, digitalRead(inPin11));
+  bitWrite(shiftByte2, 4, digitalRead(inPin12));
+  bitWrite(shiftByte2, 5, digitalRead(inPin13));
+  bitWrite(shiftByte2, 6, digitalRead(inPin14));
+
+  // Shifting out the bits to the Shift Register
+
+  // Pull Latch Pin LOW before sending data
+  
+  digitalWrite(latchPin, LOW);
+
+  // Shift the bits out to the Shift Registers
+  // starting with the 7 bits from the second byte
+  // to get the diodes lit in correct order from
+  // the buttons
+  
+  shiftOut(dataPin, clockPin, MSBFIRST, shiftByte2);
+  shiftOut(dataPin, clockPin, MSBFIRST, shiftByte1);
+
+  // Turn on the Latch Pin to move the values to 
+  // the output stage of the Shift Registers
+  
+  digitalWrite(latchPin, HIGH);
+
+    // Give the process a 0,2 sec break
+
+  delay(200);
+
+}
