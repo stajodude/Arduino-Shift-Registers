@@ -1,0 +1,69 @@
+// Give each respective Input Pin a named variable in a 
+
+const byte inPins[] = { A0, A1, A2, A3, A4, A5, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+
+// Give each respective Output Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the Shift Register
+
+const byte latchPin = 2;
+const byte clockPin = 3;
+const byte dataPin = 4;
+
+// Declaring the bitsToSend variable which specifies the bit
+// correlating to the specific output pin on the 74HC595
+
+byte shiftByte1;
+byte shiftByte2;
+
+void setup() {
+  for (auto pin : inPins) {
+    pinMode(pin, INPUT);
+  }
+
+  // Declare the Output Pins to work in Output
+  // Mode to the Shift Register input pins
+
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+}
+
+void loop() {
+
+  // Read the inputs and collects the values to be shifted out
+  // Correlates the input pins to the bits to be sent
+  // Since shiftOut is  written to output 1 byte (8 bits) it
+  // requires a two step operation to output values larger than 255
+
+  for (byte i = 0; i < sizeof(inPins); i++) {
+    if (i < 8) {
+      bitWrite(shiftByte1, i, digitalRead(inPins[i]));
+    } else {
+      bitWrite(shiftByte2, i - 8, digitalRead(inPins[i]));
+    }
+  }
+
+  // Shifting out the bits to the Shift Register
+
+  // Pull Latch Pin LOW before sending data
+  
+  digitalWrite(latchPin, LOW);
+
+  // Shift the bits out to the Shift Registers
+  // starting with the 7 bits from the second byte
+  // to get the diodes lit in correct order from
+  // the buttons
+  
+  shiftOut(dataPin, clockPin, MSBFIRST, shiftByte1);
+  shiftOut(dataPin, clockPin, MSBFIRST, shiftByte2);
+
+  // Turn on the Latch Pin to move the values to 
+  // the output stage of the Shift Registers
+  
+  digitalWrite(latchPin, HIGH);
+
+  // Give the process a 0,2 sec break
+
+  delay(200);
+}
