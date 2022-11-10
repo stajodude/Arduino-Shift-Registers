@@ -1,0 +1,297 @@
+// Give each respective Input Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the PISO Shift Register
+
+const byte inLatchPin = 5;
+const byte inClockPin = 6;
+const byte inEnablePin = 8;
+const byte inDataPin = 7;
+
+// Give each respective Output Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the SIPO Shift Register
+
+const byte outLatchPin = 2;
+const byte outClockPin = 13;
+const byte outDataPin = 4;
+
+// Initialize a variable for storing the byte that
+// is going to be sent to the Shift Register
+
+byte prevShiftByte1 = 00000000;
+byte prevShiftByte2 = 00000000;
+
+byte currShiftByte1 = 00000000;
+byte currShiftByte2 = 00000000;
+
+byte outShiftByte1 = 00000000;
+byte outShiftByte2 = 00000000;
+
+void setup() {
+  
+  // Initialize the Input Pins to work in Output  
+  // Mode to the PISO Shift Register Latch Pin
+  // and Clock Pin, and in Input Mode to the
+  // inDataPin
+  
+  pinMode(inLatchPin, OUTPUT);
+  pinMode(inClockPin, OUTPUT);
+  pinMode(inEnablePin, OUTPUT);
+  pinMode(inDataPin, INPUT);
+
+  // Initialize the Output Pins to work in Output
+  // Mode to the SIPO Shift Register input pins
+  
+  pinMode(outLatchPin, OUTPUT);
+  pinMode(outClockPin, OUTPUT);
+  pinMode(outDataPin, OUTPUT);
+
+  // Required initial states of these two pins
+  // according to the datasheet timing diagram
+
+  digitalWrite(inLatchPin,HIGH);
+  digitalWrite(inEnablePin,HIGH);
+}
+
+void loop() {
+
+  // ********INPUT PART********
+
+  // Reading the PISO Shift Register
+  
+  // Pulse the Input Latch Pin to load the parallell
+  // data in the PISO Shift Register to the serial outputs
+
+  digitalWrite(inLatchPin, LOW);
+  delayMicroseconds(5);
+  digitalWrite(inLatchPin, HIGH);
+  delayMicroseconds(5);  
+
+  // Shift the bits out from the PISO Shift Register
+
+  digitalWrite(inClockPin, HIGH);
+  digitalWrite(inEnablePin, LOW);
+
+  currShiftByte1 = shiftIn(inDataPin, inClockPin, MSBFIRST);
+  currShiftByte2 = shiftIn(inDataPin, inClockPin, MSBFIRST);
+
+  //************FIRST BYTE**************
+
+  // If the most right bit (bit 0) in the currShiftByte1 is
+  // not the same as the most right bit in the prevShiftByte1
+  // AND if the most right bit in the currShiftByte1 is HIGH
+  // AND if the most right bit in the outShiftByte1 is LOW
+  // then the button has gone from unpressed to pressed when this
+  // output was LOW, and we change the output from LOW to HIGH
+
+  if ((bitRead(currShiftByte1, 0) != bitRead(prevShiftByte1, 0)) && (bitRead(currShiftByte1, 0) == HIGH) && (bitRead(outShiftByte1, 0) == LOW))
+{
+  bitWrite(outShiftByte1, 0, HIGH);
+}
+
+  // If the most right bit (bit 0) in the currShiftByte1 is
+  // not the same as the most right bit (bit 0) in the outShiftByte1
+  // AND if the most right bit in the currShiftByte1 is HIGH
+  // AND if the most right bit in the outShiftByte1 is HIGH
+  // then the button has gone from unpressed to pressed when this
+  // output was HIGH, and we change the output from HIGH to LOW  
+
+  else if ((bitRead(currShiftByte1, 0) != bitRead(prevShiftByte1, 0)) && (bitRead(currShiftByte1, 0) == HIGH) && (bitRead(outShiftByte1, 0) == HIGH))
+{  
+  bitWrite(outShiftByte1, 0, LOW);
+}
+
+  // Same procedure for the second most right bit (bit 1)
+  
+  if ((bitRead(currShiftByte1, 1) != bitRead(prevShiftByte1, 1)) && (bitRead(currShiftByte1, 1) == HIGH) && (bitRead(outShiftByte1, 1) == LOW))
+{
+  bitWrite(outShiftByte1, 1, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 1) != bitRead(prevShiftByte1, 1)) && (bitRead(currShiftByte1, 1) == HIGH) && (bitRead(outShiftByte1, 1) == HIGH))
+{  
+  bitWrite(outShiftByte1, 1, LOW);
+}
+
+  // Same procedure for bit 2
+
+  if ((bitRead(currShiftByte1, 2) != bitRead(prevShiftByte1, 2)) && (bitRead(currShiftByte1, 2) == HIGH) && (bitRead(outShiftByte1, 2) == LOW))
+{
+  bitWrite(outShiftByte1, 2, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 2) != bitRead(prevShiftByte1, 2)) && (bitRead(currShiftByte1, 2) == HIGH) && (bitRead(outShiftByte1, 2) == HIGH))
+{  
+  bitWrite(outShiftByte1, 2, LOW);
+}
+
+  // Same procedure for bit 3
+
+  if ((bitRead(currShiftByte1, 3) != bitRead(prevShiftByte1, 3)) && (bitRead(currShiftByte1, 3) == HIGH) && (bitRead(outShiftByte1, 3) == LOW))
+{
+  bitWrite(outShiftByte1, 3, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 3) != bitRead(prevShiftByte1, 3)) && (bitRead(currShiftByte1, 3) == HIGH) && (bitRead(outShiftByte1, 3) == HIGH))
+{  
+  bitWrite(outShiftByte1, 3, LOW);
+}
+
+  // Same procedure for bit 4
+
+  if ((bitRead(currShiftByte1, 4) != bitRead(prevShiftByte1, 4)) && (bitRead(currShiftByte1, 4) == HIGH) && (bitRead(outShiftByte1, 4) == LOW))
+{
+  bitWrite(outShiftByte1, 4, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 4) != bitRead(prevShiftByte1, 4)) && (bitRead(currShiftByte1, 4) == HIGH) && (bitRead(outShiftByte1, 4) == HIGH))
+{  
+  bitWrite(outShiftByte1, 4, LOW);
+}
+
+  // Same procedure for bit 5
+
+  if ((bitRead(currShiftByte1, 5) != bitRead(prevShiftByte1, 5)) && (bitRead(currShiftByte1, 5) == HIGH) && (bitRead(outShiftByte1, 5) == LOW))
+{
+  bitWrite(outShiftByte1, 5, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 5) != bitRead(prevShiftByte1, 5)) && (bitRead(currShiftByte1, 5) == HIGH) && (bitRead(outShiftByte1, 5) == HIGH))
+{  
+  bitWrite(outShiftByte1, 5, LOW);
+}
+
+  // Same procedure for bit 6
+
+  if ((bitRead(currShiftByte1, 6) != bitRead(prevShiftByte1, 6)) && (bitRead(currShiftByte1, 6) == HIGH) && (bitRead(outShiftByte1, 6) == LOW))
+{
+  bitWrite(outShiftByte1, 6, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 6) != bitRead(prevShiftByte1, 6)) && (bitRead(currShiftByte1, 6) == HIGH) && (bitRead(outShiftByte1, 6) == HIGH))
+{  
+  bitWrite(outShiftByte1, 6, LOW);
+}
+
+  // Same procedure for bit 7
+
+  if ((bitRead(currShiftByte1, 7) != bitRead(prevShiftByte1, 7)) && (bitRead(currShiftByte1, 7) == HIGH) && (bitRead(outShiftByte1, 7) == LOW))
+{
+  bitWrite(outShiftByte1, 7, HIGH);
+}
+  else if ((bitRead(currShiftByte1, 7) != bitRead(prevShiftByte1, 7)) && (bitRead(currShiftByte1, 7) == HIGH) && (bitRead(outShiftByte1, 7) == HIGH))
+{  
+  bitWrite(outShiftByte1, 7, LOW);
+}
+
+  //************SECOND BYTE**************
+
+
+  // Same procedure as above, but now for the second byte for the second chip
+
+  if ((bitRead(currShiftByte2, 0) != bitRead(prevShiftByte2, 0)) && (bitRead(currShiftByte2, 0) == HIGH) && (bitRead(outShiftByte2, 0) == LOW))
+{
+  bitWrite(outShiftByte2, 0, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 0) != bitRead(prevShiftByte2, 0)) && (bitRead(currShiftByte2, 0) == HIGH) && (bitRead(outShiftByte2, 0) == HIGH))
+{  
+  bitWrite(outShiftByte2, 0, LOW);
+}
+
+  // Same procedure for bit 1
+  
+  if ((bitRead(currShiftByte2, 1) != bitRead(prevShiftByte2, 1)) && (bitRead(currShiftByte2, 1) == HIGH) && (bitRead(outShiftByte2, 1) == LOW))
+{
+  bitWrite(outShiftByte2, 1, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 1) != bitRead(prevShiftByte2, 1)) && (bitRead(currShiftByte2, 1) == HIGH) && (bitRead(outShiftByte2, 1) == HIGH))
+{  
+  bitWrite(outShiftByte2, 1, LOW);
+}
+
+  // Same procedure for bit 2
+
+  if ((bitRead(currShiftByte2, 2) != bitRead(prevShiftByte2, 2)) && (bitRead(currShiftByte2, 2) == HIGH) && (bitRead(outShiftByte2, 2) == LOW))
+{
+  bitWrite(outShiftByte2, 2, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 2) != bitRead(prevShiftByte2, 2)) && (bitRead(currShiftByte2, 2) == HIGH) && (bitRead(outShiftByte2, 2) == HIGH))
+{  
+  bitWrite(outShiftByte2, 2, LOW);
+}
+
+  // Same procedure for bit 3
+
+  if ((bitRead(currShiftByte2, 3) != bitRead(prevShiftByte2, 3)) && (bitRead(currShiftByte2, 3) == HIGH) && (bitRead(outShiftByte2, 3) == LOW))
+{
+  bitWrite(outShiftByte2, 3, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 3) != bitRead(prevShiftByte2, 3)) && (bitRead(currShiftByte2, 3) == HIGH) && (bitRead(outShiftByte2, 3) == HIGH))
+{  
+  bitWrite(outShiftByte2, 3, LOW);
+}
+
+  // Same procedure for bit 4
+
+  if ((bitRead(currShiftByte2, 4) != bitRead(prevShiftByte2, 4)) && (bitRead(currShiftByte2, 4) == HIGH) && (bitRead(outShiftByte2, 4) == LOW))
+{
+  bitWrite(outShiftByte2, 4, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 4) != bitRead(prevShiftByte1, 4)) && (bitRead(currShiftByte2, 4) == HIGH) && (bitRead(outShiftByte2, 4) == HIGH))
+{  
+  bitWrite(outShiftByte2, 4, LOW);
+}
+
+  // Same procedure for bit 5
+
+  if ((bitRead(currShiftByte2, 5) != bitRead(prevShiftByte2, 5)) && (bitRead(currShiftByte2, 5) == HIGH) && (bitRead(outShiftByte2, 5) == LOW))
+{
+  bitWrite(outShiftByte2, 5, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 5) != bitRead(prevShiftByte2, 5)) && (bitRead(currShiftByte2, 5) == HIGH) && (bitRead(outShiftByte2, 5) == HIGH))
+{  
+  bitWrite(outShiftByte2, 5, LOW);
+}
+
+  // Same procedure for bit 6
+
+  if ((bitRead(currShiftByte2, 6) != bitRead(prevShiftByte2, 6)) && (bitRead(currShiftByte2, 6) == HIGH) && (bitRead(outShiftByte2, 6) == LOW))
+{
+  bitWrite(outShiftByte2, 6, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 6) != bitRead(prevShiftByte2, 6)) && (bitRead(currShiftByte2, 6) == HIGH) && (bitRead(outShiftByte2, 6) == HIGH))
+{  
+  bitWrite(outShiftByte2, 6, LOW);
+}
+
+  // Same procedure for bit 7
+
+  if ((bitRead(currShiftByte2, 7) != bitRead(prevShiftByte2, 7)) && (bitRead(currShiftByte2, 7) == HIGH) && (bitRead(outShiftByte2, 7) == LOW))
+{
+  bitWrite(outShiftByte2, 7, HIGH);
+}
+  else if ((bitRead(currShiftByte2, 7) != bitRead(prevShiftByte2, 7)) && (bitRead(currShiftByte2, 7) == HIGH) && (bitRead(outShiftByte2, 7) == HIGH))
+{  
+  bitWrite(outShiftByte2, 7, LOW);
+}
+
+  digitalWrite(inEnablePin, HIGH);
+  
+
+  // ********OUTPUT PART******** 
+
+  // Pull Output Latch Pin LOW before sending data
+  
+  digitalWrite(outLatchPin, LOW);
+
+  // Shift the bits out to the SIPO Shift Register
+  
+  shiftOut(outDataPin, outClockPin, MSBFIRST, outShiftByte2);
+  shiftOut(outDataPin, outClockPin, MSBFIRST, outShiftByte1);
+
+  // Turn on the Output Latch Pin to move the values to 
+  // the output stage of the Shift Register
+  
+  digitalWrite(outLatchPin, HIGH);
+
+  // Give the process a 0,1 sec break
+
+  delay(100);
+
+  prevShiftByte1 = currShiftByte1;
+  prevShiftByte2 = currShiftByte2;
+}
