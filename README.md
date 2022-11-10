@@ -2,3 +2,4 @@
 Project files with code for different shift register configurations on Arduino <BR />
 8in8outConstByte is a Simple Arduino code example for making 8 LED outputs react to 8 button inputs using Constant Byte variable <BR />
 8in8ShiftOut is a Simple Arduino code example for making 8 button inputs shift out 8 bits to a shift register <BR />
+8in8ShiftOutConst Byte is a Simple Arduino code example to Control 8 bits for a ShiftRegister with 8 input buttons using Costant Byte <BR />
