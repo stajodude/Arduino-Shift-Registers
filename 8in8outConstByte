@@ -1,0 +1,86 @@
+// Give each respective Input Pin a named variable
+
+const byte inPin0 = A0;
+const byte inPin1 = A1;
+const byte inPin2 = A2;
+const byte inPin3 = A3;
+const byte inPin4 = A4;
+const byte inPin5 = A5;
+const byte inPin6 = 2;
+const byte inPin7 = 3;
+
+// Give each respective Output Pin a named variable
+
+const byte outPin0 = 6;
+const byte outPin1 = 7;
+const byte outPin2 = 8;
+const byte outPin3 = 9;
+const byte outPin4 = 10;
+const byte outPin5 = 11;
+const byte outPin6 = 12;
+const byte outPin7 = 13;
+
+// Declare variables for storing the value of each output pin
+
+byte val0 = 0;
+byte val1 = 0;
+byte val2 = 0;
+byte val3 = 0;
+byte val4 = 0;
+byte val5 = 0;
+byte val6 = 0;
+byte val7 = 0;
+
+void setup() {
+  
+  // Declare Input Pins to work in Input Mode
+  
+  pinMode(inPin0, INPUT);
+  pinMode(inPin1, INPUT);
+  pinMode(inPin2, INPUT);
+  pinMode(inPin3, INPUT);
+  pinMode(inPin4, INPUT);
+  pinMode(inPin5, INPUT);
+  pinMode(inPin6, INPUT);
+  pinMode(inPin7, INPUT);
+
+  // Declare Output Pins to work in Output Mode
+  
+  pinMode(outPin0, OUTPUT);
+  pinMode(outPin1, OUTPUT);
+  pinMode(outPin2, OUTPUT);
+  pinMode(outPin3, OUTPUT);
+  pinMode(outPin4, OUTPUT);
+  pinMode(outPin5, OUTPUT);
+  pinMode(outPin6, OUTPUT);
+  pinMode(outPin7, OUTPUT);
+  
+}
+
+void loop() {
+  
+  // Read input pin values and store their values
+  // in their respective storage variables
+  
+  val0 = digitalRead(inPin0);
+  val1 = digitalRead(inPin1);
+  val2 = digitalRead(inPin2);
+  val3 = digitalRead(inPin3);
+  val4 = digitalRead(inPin4);
+  val5 = digitalRead(inPin5);
+  val6 = digitalRead(inPin6);
+  val7 = digitalRead(inPin7);
+
+  // Write the storage variables value to the outputs
+  
+  digitalWrite(outPin0, val0);
+  digitalWrite(outPin1, val1);
+  digitalWrite(outPin2, val2);
+  digitalWrite(outPin3, val3);
+  digitalWrite(outPin4, val4);
+  digitalWrite(outPin5, val5);
+  digitalWrite(outPin6, val6);
+  digitalWrite(outPin7, val7);
+  
+
+}
