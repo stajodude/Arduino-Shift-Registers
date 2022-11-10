@@ -6,3 +6,4 @@ Project files with code for different shift register configurations on Arduino <
 8shiftIn8shiftOut is a Simple Arduino code example to Shift out a byte to a ShiftRegister using 8 buttons controling an input ShiftRegister <BR />
 15in15shiftOutConstByte is a Simple Arduino code example for Shifting out two bytes to two Shift Registers with input button <BR />
 15in15shiftOutCondensed is a condensed version of 15in15ShiftOut <BR />
+15shiftIn16shiftOut is using two Shift Registers as input and two Shift Registers as output <BR />
