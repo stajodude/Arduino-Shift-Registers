@@ -1,0 +1,91 @@
+// Give each respective Input Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the PISO Shift Register
+
+const byte inLatchPin = 5;
+const byte inClockPin = 6;
+const byte inEnablePin = 8;
+const byte inDataPin = 7;
+
+// Give each respective Output Pin a named variable
+// Each pin is to connect to the serial inputs of
+// the SIPO Shift Register
+
+const byte outLatchPin = 2;
+const byte outClockPin = 3;
+const byte outDataPin = 4;
+
+// Initialize a variable for storing the byte that
+// is going to be sent to the Shift Register
+
+byte shiftByte;
+
+void setup() {
+  
+  // Initialize the Input Pins to work in Output  
+  // Mode to the PISO Shift Register Latch Pin
+  // and Clock Pin, and in Input Mode to the
+  // inDataPin
+  
+  pinMode(inLatchPin, OUTPUT);
+  pinMode(inClockPin, OUTPUT);
+  pinMode(inEnablePin, OUTPUT);
+  pinMode(inDataPin, INPUT);
+
+  // Initialize the Output Pins to work in Output
+  // Mode to the SIPO Shift Register input pins
+  
+  pinMode(outLatchPin, OUTPUT);
+  pinMode(outClockPin, OUTPUT);
+  pinMode(outDataPin, OUTPUT);
+
+  // Required initial states of these two pins
+  // according to the datasheet timing diagram
+
+  digitalWrite(inLatchPin,HIGH);
+  digitalWrite(inEnablePin,HIGH);
+}
+
+void loop() {
+
+  // ********INPUT PART********
+
+  // Reading the PISO Shift Register
+  
+  // Pulse the Input Latch Pin to load the parallell
+  // data in the PISO Shift Register to the serial outputs
+
+  digitalWrite(inLatchPin, LOW);
+  delayMicroseconds(5);
+  digitalWrite(inLatchPin, HIGH);
+  delayMicroseconds(5);  
+
+  // Shift the bits out from the PISO Shift Register
+
+  digitalWrite(inClockPin, HIGH);
+  digitalWrite(inEnablePin, LOW);
+
+  shiftByte = shiftIn(inDataPin, inClockPin, MSBFIRST);
+
+  digitalWrite(inEnablePin, HIGH);
+
+  // ********OUTPUT PART******** 
+
+  // Pull Output Latch Pin LOW before sending data
+  
+  digitalWrite(outLatchPin, LOW);
+
+  // Shift the bits out to the SIPO Shift Register
+  
+  shiftOut(outDataPin, outClockPin, MSBFIRST, shiftByte);
+
+  // Turn on the Output Latch Pin to move the values to 
+  // the output stage of the Shift Register
+  
+  digitalWrite(outLatchPin, HIGH);
+
+  // Give the process a 0,1 sec break
+
+  delay(100);
+
+}
